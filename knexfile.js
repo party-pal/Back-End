@@ -10,7 +10,7 @@ module.exports = {
       directory: './data/migrations',
       tableName: 'dbmigrations',
     },
-    seeds: { directory: './database/seeds' },
+    seeds: { directory: './data/seeds' },
   },
   testing: {
     client: 'sqlite3',
