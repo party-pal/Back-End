@@ -4,7 +4,8 @@
   "description": "The login credentials database",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon -r dotenv/config index.js",
+    "start": "node -r dotenv/config index.js"
   },
   "repository": "https://github.com/party-pal/Back-End.git",
   "author": "Shaun Kolich",
