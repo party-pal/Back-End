@@ -6,6 +6,7 @@ const server = express();
 const authRouter = require('../auth/auth-router.js');
 const db = require('../data/dbConfig.js');
 const connectSessionKnex = require('connect-session-knex');
+const party = require('../parties/parties-model.js');
 
 const KnexSessionStore = connectSessionKnex(session);
 
@@ -34,9 +35,11 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 server.use('/api/auth', authRouter);
+server.use('/api/', party);
 
 server.get('/', (req, res) => {
     res.send('Creating the Login Database');
 })
+
 
 module.exports = server;
