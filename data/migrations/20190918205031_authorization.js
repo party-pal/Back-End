@@ -17,7 +17,7 @@ exports.up = function (knex) {
         .createTable('parties', tbl => {
             tbl.increments();
             tbl
-                .string('party_title', 255)
+                .string('partytitle', 255)
                 .notNullable();
             tbl
                 .string('guestCount', 255)
@@ -28,7 +28,7 @@ exports.up = function (knex) {
             tbl
                 .string('theme', 255)
                 .notNullable();
-            tbl.integer('user_Id')
+            tbl.integer('userid')
                 .unsigned()
                 .notNullable()
                 .references('id')
@@ -37,12 +37,12 @@ exports.up = function (knex) {
         .createTable('venues', tbl => {
             tbl.increments();
             tbl
-                .string('venue_title', 255)
+                .string('venuetitle', 255)
             tbl
                 .string('cost', 255)
             tbl
                 .string('location', 255)
-            tbl.integer('party_id')
+            tbl.integer('partyid')
                 .unsigned()
                 .notNullable()
                 .references('id')
@@ -54,12 +54,10 @@ exports.up = function (knex) {
         })
 };
 
-exports.down = function (knex, Promise) {
-    return knex.schema.dropTableIfExists('users')
-        .then(()=>{
-            knex.schema.dropTableIfExists('parties')
-                .then(() => {
-                    knex.schema.dropTableIfExists('venues')   
-                })
-        })
+exports.down = function (knex) {
+    return knex.schema
+        .dropTableIfExists('users')
+        .dropTableIfExists('venues')
+        .dropTableIfExists('parties');
+         
 };

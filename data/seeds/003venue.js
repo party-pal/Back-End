@@ -1,11 +1,11 @@
 
 exports.seed = function(knex) {
-       return knex('table_name').insert([
+       return knex('venues').insert([
         {
-          venue_title: "Bar",
+          venuetitle: "Bar",
           cost: "1,000,000,000",
           location: "Bar",
-          party_id: 1
+          partyid: 1
           }
           
       ]);
