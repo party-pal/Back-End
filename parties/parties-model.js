@@ -75,6 +75,15 @@ router.delete('/parties/:id', (req, res) => {
         });
 });
 
+router.put('/parties/:id', (req, res) => {
+    db('parties')
+    const token = req.headers.authorization.split(' ')[1];
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    const party = req.body;
+        .where('userid', payload.userid)
+        
+})
+
 
 module.exports = router;
 
