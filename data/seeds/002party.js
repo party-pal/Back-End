@@ -2,12 +2,12 @@ var faker = require('faker');
 
 const createParty = () => {
   return {
-    partytitle: faker.random.words() ,
+    partytitle: faker.random.words(),
     guestCount: faker.random.number(),
-    date : faker.date.future(),
-    theme : faker.random.words(),
+    date: faker.date.future(),
+    theme: faker.random.words(),
     userid: 1
-}
+  }
 }
 const createParties = (numParties = 50) => {
   return new Array(numParties)
@@ -28,7 +28,7 @@ exports.seed = function (knex) {
       userid: 1
     },
 
-     ...createParties(),
+    ...createParties(),
   ]);
 
 };
