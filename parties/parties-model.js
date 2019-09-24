@@ -20,21 +20,18 @@ router.get('/parties', (req, res) => {
 });
 
 router.get('/parties/:id', (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const payload = jwt.verify(token, process.env.JWT_SECRET)
     // const { id } = req.params;
     db('parties').where('userid', payload.userid)
-        .then(tables => {
-            const table = tables[0];
-            if (table) {
-                res.json(table)
-            } else {
-                res.status(404).json({ message: 'invalid ID' })
-            }
+        .then(parties => {
+            res.status(201).json(parties)
         })
-        .catch(({ message }) => {
-            res.status(500).json({ message });
-        })
+    } catch (error) {
+        res.status(500).json(error);
+    }
+    
 });
 
 router.post('/parties', (req, res) => {
@@ -76,12 +73,21 @@ router.delete('/parties/:id', (req, res) => {
 });
 
 router.put('/parties/:id', (req, res) => {
-    db('parties')
+    
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     const party = req.body;
-        .where('userid', payload.userid)
-        
+    party.userid = payload.userid;
+    db('parties')
+        .where('id',req.params.id)
+        .update(party)
+        .then(() => {
+            res.sendStatus(200)
+        })
+        .catch(error => {
+            res.status(500).json(error);
+    })
+    
 })
 
 
