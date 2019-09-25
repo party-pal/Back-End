@@ -23,11 +23,9 @@ router.get('/parties/:id', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         jwt.verify(token, process.env.JWT_SECRET)
-        // const { id } = req.params;
-        db('parties')
+        const { id } = req.params;
+        db('parties').where('userid', id)
             .then(parties => {
-                console.log(parties);
-                console.log(req.params.id)
                 res.status(201).json(parties)
             })
     } catch (error) {

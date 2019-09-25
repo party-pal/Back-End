@@ -20,25 +20,17 @@ const createParties = (numParties = 50) => {
 // console.log(createParties());
 
 
-exports.seed = function () {
-  // Inserts seed entries
-  return db('users')
-    .then(users => {
-      const randomUser = (min, max) => Math.round(Math.random() * (max - min) + min)
-      const randomIndices = Array(users.length)                     .fill(0)
-                .map(() => randomUser(1, users.length-1))
-        
-      
-      
-      const parties = randomIndices.map((index => {
-        return createParty(1)
-      }))
-      
-      return parties
+exports.seed = async function () {
+  const users = await db("users")
 
-    
-    }).then((parties) => {
-      console.log(parties);
-      db('parties').insert(parties);
-    })
+  const randomUser = (min, max) => Math.round(Math.random() * (max - min) + min)
+  const randomIndices = Array(users.length)
+    .fill(0)
+    .map(() => randomUser(1, users.length - 1))
+
+  const parties = randomIndices.map(index => {
+    return createParty(index)
+  });
+
+  return db("parties").insert(parties)
 };
