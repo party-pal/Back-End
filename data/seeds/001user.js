@@ -1,6 +1,6 @@
 const bycrypt = require('bcryptjs');
 var faker = require('faker');
-
+const db = require('../dbConfig');
 
 
 exports.seed = async function(knex) {
@@ -29,7 +29,7 @@ exports.seed = async function(knex) {
   
   // console.log(createUsers());
 
-      return knex ('users').insert([
+      return db('users').insert([
         {
           firstname: 'Shaun',
           lastname: 'Kolich',

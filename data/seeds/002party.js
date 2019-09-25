@@ -1,12 +1,14 @@
 var faker = require('faker');
+const db = require('../dbConfig')
 
-const createParty = () => {
+const createParty = (userid) => {
+  // console.log(userid)
   return {
     partytitle: faker.random.words(),
     guestCount: faker.random.number(),
     date: faker.date.future(),
     theme: faker.random.words(),
-    userid: 1
+    userid:userid
   }
 }
 const createParties = (numParties = 50) => {
@@ -15,20 +17,28 @@ const createParties = (numParties = 50) => {
     .map(createParty);
 }
 
-console.log(createParties());
+// console.log(createParties());
 
-exports.seed = function (knex) {
+
+exports.seed = function () {
   // Inserts seed entries
-  return knex('parties').insert([
-    {
-      partytitle: "graduation",
-      guestCount: "25",
-      date: "Jan 25th",
-      theme: "Batman",
-      userid: 1
-    },
+  return db('users')
+    .then(users => {
+      const randomUser = (min, max) => Math.round(Math.random() * (max - min) + min)
+      const randomIndices = Array(users.length)                     .fill(0)
+                .map(() => randomUser(1, users.length-1))
+        
+      
+      
+      const parties = randomIndices.map((index => {
+        return createParty(1)
+      }))
+      
+      return parties
 
-    ...createParties(),
-  ]);
-
+    
+    }).then((parties) => {
+      console.log(parties);
+      db('parties').insert(parties);
+    })
 };

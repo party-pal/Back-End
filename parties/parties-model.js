@@ -22,16 +22,18 @@ router.get('/parties', (req, res) => {
 router.get('/parties/:id', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const payload = jwt.verify(token, process.env.JWT_SECRET)
-    // const { id } = req.params;
-    db('parties').where('userid', payload.userid)
-        .then(parties => {
-            res.status(201).json(parties)
-        })
+        jwt.verify(token, process.env.JWT_SECRET)
+        // const { id } = req.params;
+        db('parties')
+            .then(parties => {
+                console.log(parties);
+                console.log(req.params.id)
+                res.status(201).json(parties)
+            })
     } catch (error) {
         res.status(500).json(error);
     }
-    
+
 });
 
 router.post('/parties', (req, res) => {
@@ -39,7 +41,7 @@ router.post('/parties', (req, res) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     db('parties').insert(req.body)
         .then(ids => {
-            
+
             db('parties')
                 .where('userid', payload.userid)
                 .first()
@@ -55,39 +57,42 @@ router.post('/parties', (req, res) => {
 })
 
 router.delete('/parties/:id', (req, res) => {
-        db('parties')
-        const token = req.headers.authorization.split(' ')[1];
-        const payload = jwt.verify(token, process.env.JWT_SECRET)
-            .where('userid', payload.userid)
-            .del()
-            .then(count => {
-                if (count > 0) {
-                res.status(204).end();
-                } else {
-                res.status(404).json({ message: 'Record not found' });
-            }
-        })
-            .catch(error => {
-                res.status(500).json(error);
-        });
-});
 
-router.put('/parties/:id', (req, res) => {
-    
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     const party = req.body;
     party.userid = payload.userid;
     db('parties')
-        .where('id',req.params.id)
+        .where('id', req.params.id)
+        .del()
+        .then(count => {
+            if (count > 0) {
+                res.status(204).end();
+            } else {
+                res.status(404).json({ message: 'Record not found' });
+            }
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
+});
+
+router.put('/parties/:id', (req, res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    const party = req.body;
+    party.userid = payload.userid;
+    db('parties')
+        .where('id', req.params.id)
         .update(party)
         .then(() => {
             res.sendStatus(200)
         })
         .catch(error => {
             res.status(500).json(error);
-    })
-    
+        })
+
 })
 
 
