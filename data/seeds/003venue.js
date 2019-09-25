@@ -1,6 +1,7 @@
+const db = require('../dbConfig');
 
-exports.seed = function(knex) {
-       return knex('venues').insert([
+exports.seed = function() {
+       return db('venues').insert([
         {
           venuetitle: "Bar",
           cost: "1,000,000,000",
