@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const db = require('../data/dbConfig');
 
-router.get('/tasks', (req, res) => {
+router.get('/task', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
@@ -53,7 +53,7 @@ router.post('/task', (req, res) => {
     
 });
 
-router.delete('/venues/:id', (req, res) => {
+router.delete('/task/:id', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
