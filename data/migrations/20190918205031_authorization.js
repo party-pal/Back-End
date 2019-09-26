@@ -33,7 +33,7 @@ exports.up = function (knex) {
                 .notNullable()
                 .references('id')
                 .inTable('users')
-            })
+        })
         .createTable('venues', tbl => {
             tbl.increments();
             tbl
@@ -52,12 +52,37 @@ exports.up = function (knex) {
 
 
         })
+        .createTable('task', tbl => {
+            tbl.increments()
+            tbl
+                .string('purchase', 255),
+                tbl.integer("purchase_cost", 250),
+
+                tbl
+                    .integer('entertainment', 255)
+            tbl.integer("entertainment_cost", 250),
+
+                tbl
+                    .string('todo', 255)
+            tbl
+                .boolean('todo_completed')
+                .defaultTo('false')
+
+            tbl.integer('venueid')
+                .unsigned()
+                .notNullable()
+                .references('id')
+                .inTable('venues')
+
+        })
+
 };
 
 exports.down = function (knex) {
     return knex.schema
+        .dropTableIfExists('task')
         .dropTableIfExists('users')
         .dropTableIfExists('venues')
         .dropTableIfExists('parties');
-         
+
 };

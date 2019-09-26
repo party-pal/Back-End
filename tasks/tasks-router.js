@@ -2,14 +2,14 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const db = require('../data/dbConfig');
 
-router.get('/venues', (req, res) => {
+router.get('/tasks', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     console.log(payload);
-    db('venues')
+    db('task')
         .where('partyid',req.params.id)
-        .join('parties', 'partyid', 'parties.id')
+        .join('venues', 'venueid', 'venues.id')
         .then(venues => {
             res.status(200).json(venues);
         })
@@ -18,12 +18,12 @@ router.get('/venues', (req, res) => {
         });
 });
 
-router.get('/venues/:id', (req, res) => {
+router.get('/task/:id', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         jwt.verify(token, process.env.JWT_SECRET)
         const { id } = req.params;
-        db('venues').where('partyid', req.params.id)
+        db('task').where('venueid', req.params.id)
             .then(venues => {
                 res.status(201).json(venues)
             })
@@ -33,15 +33,15 @@ router.get('/venues/:id', (req, res) => {
 
 });
 
-router.post('/venues', (req, res) => {
+router.post('/task', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const payload = jwt.verify(token, process.env.JWT_SECRET)
         const party = req.body;
         party.userid = payload.userid;
         console.log(party.userid)    
-        db('venues').insert(party)
-            .where('partyid', req.params.id)
+        db('task').insert(party)
+            .where('venueid', req.params.id)
             .first()
             .then(venue => {
                 res.status(201).json(venue);
@@ -59,7 +59,7 @@ router.delete('/venues/:id', (req, res) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     const party = req.body;
     party.userid = payload.userid;
-    db('venues')
+    db('task')
         .where('id', req.params.id)
         .del()
         .then(count => {
@@ -74,13 +74,13 @@ router.delete('/venues/:id', (req, res) => {
         });
 });
 
-router.put('/venues/:id', (req, res) => {
+router.put('/task/:id', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     const party = req.body;
     party.userid = payload.userid;
-    db('parties')
+    db('task')
         .where('id', req.params.id)
         .update(party)
         .then(() => {
