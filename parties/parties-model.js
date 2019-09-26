@@ -35,24 +35,24 @@ router.get('/parties/:id', (req, res) => {
 });
 
 router.post('/parties', (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const payload = jwt.verify(token, process.env.JWT_SECRET)
-    db('parties').insert(req.body)
-        .then(ids => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const payload = jwt.verify(token, process.env.JWT_SECRET)
+        const party = req.body;
+        party.userid = payload.userid;
+        console.log(party.userid)    
+        db('parties').insert(party)
+            .where('userid', payload.userid)
+            .first()
+            .then(party => {
+                res.status(201).json(party);
+            })
 
-            db('parties')
-                .where('userid', payload.userid)
-                .first()
-                .then(party => {
-                    res.status(201).json(party);
-                })
-                .catch(error => {
-                    res.status(500).json(error);
-                });
-        })
-
-
-})
+    } catch (error) {
+        res.status(500).json(error);
+    }
+    
+});
 
 router.delete('/parties/:id', (req, res) => {
 
