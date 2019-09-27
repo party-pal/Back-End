@@ -2,48 +2,29 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const db = require('../data/dbConfig');
 
-router.get('/parties/:partyid/venues', (req, res) => {
+router.get('/parties/:partyid/task', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     console.log(payload);
-    db('venues')
-        .where('partyid',Number(req.params.partyid))
-        .join('parties', 'partyid', 'parties.id')
-        .then(venues => {
-            res.status(200).json(venues);
+    db('task')
+        .where('partyid', Number(req.params.partyid))
+        .then(tasks => {
+            res.status(200).json(tasks);
         })
         .catch(error => {
             res.status(500).json(error);
         });
 });
 
-router.get('/parties/:partyid/venues/:venueid', (req, res) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        jwt.verify(token, process.env.JWT_SECRET)
-        const { partyid,venueid } = req.params;
-        db('venues').where('partyid', Number(partyid)).where('id',venueid)
-            .then(venues => {
-                res.status(201).json(venues)
-            })
-    } catch (error) {
-        res.status(500).json(error);
-    }
-
-});
-
-router.post('/parties/:partyid/venues', (req, res) => {
+router.post('/parties/:partyid/task', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const payload = jwt.verify(token, process.env.JWT_SECRET)
-        const venue = req.body;
-        // party.userid = payload.userid;
-        venue.userid = 1;
-        console.log(venue.userid)  
-         
-        db('venues').where('partyid', Number(req.params.partyid)).insert([venue])
-            
+        const task = req.body;
+        // const task = payload.partyid;
+        task.partyid = req.params.partyid;
+        db('task').insert([task])
             .then(venue => {
                 res.status(201).json(venue);
             })
@@ -51,17 +32,16 @@ router.post('/parties/:partyid/venues', (req, res) => {
     } catch (error) {
         res.status(500).json(error);
     }
-    
+
 });
 
-router.delete('/venues/:id', (req, res) => {
+router.delete('/task/:taskid', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
-    const party = req.body;
-    party.userid = payload.userid;
-    db('venues')
-        .where('id', Number(req.params.id))
+  
+    db('task')
+        .where('id', Number(req.params.taskid))
         .del()
         .then(count => {
             if (count > 0) {
@@ -75,15 +55,15 @@ router.delete('/venues/:id', (req, res) => {
         });
 });
 
-router.put('/venues/:id', (req, res) => {
+router.put('/task/:taskid', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
-    const party = req.body;
-    party.userid = payload.userid;
-    db('parties')
-        .where('id', Number(req.params.id))
-        .update(party)
+    const task = req.body;
+  
+    db('task')
+        .where('id', Number(req.params.taskid))
+        .update(task)
         .then(() => {
             res.sendStatus(200)
         })
