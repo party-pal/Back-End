@@ -59,7 +59,7 @@ exports.up = function (knex) {
                 tbl.integer("purchase_cost", 250),
 
                 tbl
-                    .integer('entertainment', 255)
+                    .string('entertainment', 255)
             tbl.integer("entertainment_cost", 250),
 
                 tbl
