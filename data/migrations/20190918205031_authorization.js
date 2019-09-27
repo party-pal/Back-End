@@ -23,7 +23,7 @@ exports.up = function (knex) {
                 .string('guestCount', 255)
                 .notNullable();
             tbl
-                .string('date', 255)
+                .date('date', 255)
                 .notNullable();
             tbl
                 .string('theme', 255)
@@ -68,11 +68,11 @@ exports.up = function (knex) {
                 .boolean('todo_completed')
                 .defaultTo('false')
 
-            tbl.integer('venueid')
+            tbl.integer('partyid')
                 .unsigned()
                 .notNullable()
                 .references('id')
-                .inTable('venues')
+                .inTable('parties')
 
         })
 

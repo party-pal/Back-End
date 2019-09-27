@@ -1,5 +1,5 @@
 var faker = require('faker');
-const db = require('../dbConfig')
+const db = require('../dbConfig');
 
 const createParty = (userid) => {
   // console.log(userid)
@@ -8,7 +8,7 @@ const createParty = (userid) => {
     guestCount: faker.random.number(),
     date: faker.date.future(),
     theme: faker.random.words(),
-    userid:userid
+    userid,
   }
 }
 const createParties = (numParties = 50) => {

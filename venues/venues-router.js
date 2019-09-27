@@ -2,13 +2,13 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const db = require('../data/dbConfig');
 
-router.get('/venues', (req, res) => {
+router.get('/parties/:partyid/venues', (req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     console.log(payload);
     db('venues')
-        .where('partyid',req.params.id)
+        .where('partyid',Number(req.params.partyid))
         .join('parties', 'partyid', 'parties.id')
         .then(venues => {
             res.status(200).json(venues);
@@ -18,12 +18,12 @@ router.get('/venues', (req, res) => {
         });
 });
 
-router.get('/venues/:id', (req, res) => {
+router.get('/parties/:partyid/venues/:venueid', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         jwt.verify(token, process.env.JWT_SECRET)
-        const { id } = req.params;
-        db('venues').where('partyid', req.params.id)
+        const { partyid,venueid } = req.params;
+        db('venues').where('partyid', Number(partyid)).where('id',venueid)
             .then(venues => {
                 res.status(201).json(venues)
             })
@@ -33,16 +33,17 @@ router.get('/venues/:id', (req, res) => {
 
 });
 
-router.post('/venues', (req, res) => {
+router.post('/parties/:partyid/venues', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const payload = jwt.verify(token, process.env.JWT_SECRET)
-        const party = req.body;
-        party.userid = payload.userid;
-        console.log(party.userid)    
-        db('venues').insert(party)
-            .where('partyid', req.params.id)
-            .first()
+        const venue = req.body;
+        // party.userid = payload.userid;
+        venue.userid = 1;
+        console.log(venue.userid)  
+         
+        db('venues').where('partyid', Number(req.params.partyid)).insert([venue])
+            
             .then(venue => {
                 res.status(201).json(venue);
             })
@@ -60,7 +61,7 @@ router.delete('/venues/:id', (req, res) => {
     const party = req.body;
     party.userid = payload.userid;
     db('venues')
-        .where('id', req.params.id)
+        .where('id', Number(req.params.id))
         .del()
         .then(count => {
             if (count > 0) {
@@ -81,7 +82,7 @@ router.put('/venues/:id', (req, res) => {
     const party = req.body;
     party.userid = payload.userid;
     db('parties')
-        .where('id', req.params.id)
+        .where('id', Number(req.params.id))
         .update(party)
         .then(() => {
             res.sendStatus(200)

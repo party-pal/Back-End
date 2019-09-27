@@ -6,8 +6,26 @@ exports.seed = function() {
           venuetitle: "Bar",
           cost: "1,000,000,000",
           location: "Bar",
-          partyid: 1
-          }
+          partyid: 52
+         },
+         {
+          venuetitle: "Bar",
+          cost: "1,000,000,000",
+          location: "Bar",
+          partyid: 53
+         },
+         {
+          venuetitle: "Bar",
+          cost: "1,000,000,000",
+          location: "Bar",
+          partyid: 54
+          },
+          {
+            venuetitle: "Bar",
+            cost: "1,000,000,000",
+            location: "Bar",
+            partyid: 55
+            }
           
       ]);
     
