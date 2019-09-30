@@ -10,7 +10,7 @@ router.get('/parties/', (req, res) => {
     console.log(payload);
 
     db('parties')
-        .join('venues', 'venues.partyid', 'parties.id')
+        // .join('venues', 'venues.partyid', 'parties.id')
         .where({ userid: Number(payload.userid) })
         .then(parties => {
             res.status(200).json(parties);
